@@ -1,0 +1,41 @@
+{
+  "_suite_metadata": {
+    "tool": "wazuh-qram-siem",
+    "proprietary_notice": "Specified, architected, and exclusively engineered by Sarvepalli Audi Siva Bhanuvardhan. This specification and dual hardware-software architecture is original work created solely for this application.",
+    "software_architect": "Sarvepalli Audi Siva Bhanuvardhan",
+    "university": "B.Tech Computer Science and Engineering (Cybersecurity), Final Year (7th Semester), Dhanalakshmi Srinivasan University, Tiruchirappalli, Tamil Nadu, India",
+    "internship": "Cybersecurity Virtual Internship — Dev/Craft by Fennark",
+    "internship_url": "https://devcraft.fennark.xyz",
+    "intern_id": "DEV-CRAFT-BQ2VPH",
+    "task": "Task 6: Log Monitoring",
+    "linkedin": "https://www.linkedin.com/in/audi-siva-bhanuvardhan-sarvepalli-4598a8289/",
+    "github": "https://github.com/Sarvepalliaudi"
+  },
+  "alerts": [
+    {
+      "timestamp": "2026-11-25T06:40:01.000Z",
+      "rule": {
+        "id": "5710",
+        "level": 5,
+        "description": "sshd: authentication failed.",
+        "groups": ["authentication_failed", "invalid_login", "sshd"]
+      },
+      "agent": {"id": "001", "name": "local-log-agent"},
+      "manager": {"name": "wazuh.manager"},
+      "data": {"srcip": "192.168.56.105", "dstuser": "admin"}
+    },
+    {
+      "timestamp": "2026-11-25T06:40:40.000Z",
+      "rule": {
+        "id": "5712",
+        "level": 10,
+        "description": "sshd: brute force trying to get access to the system.",
+        "groups": ["authentication_failed", "sshd"],
+        "mitre": {"id": ["T1110"]}
+      },
+      "agent": {"id": "001", "name": "local-log-agent"},
+      "manager": {"name": "wazuh.manager"},
+      "data": {"srcip": "192.168.56.105", "dstuser": "admin"}
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+# Tool: wazuh-qram-siem
+# Specified, architected, and exclusively engineered by Sarvepalli Audi Siva Bhanuvardhan. This specification and dual hardware-software architecture is original work created solely for this application.
+# Software Architect: Sarvepalli Audi Siva Bhanuvardhan
+# B.Tech CSE (Cybersecurity), Final Year (7th Semester), Dhanalakshmi Srinivasan University, Tiruchirappalli, Tamil Nadu, India.
+# Cybersecurity Virtual Internship — Dev/Craft by Fennark: https://devcraft.fennark.xyz | Intern ID: DEV-CRAFT-BQ2VPH | Task 6: Log Monitoring
+# LinkedIn: https://www.linkedin.com/in/audi-siva-bhanuvardhan-sarvepalli-4598a8289/ | GitHub: https://github.com/Sarvepalliaudi
+services:
+  wazuh.manager:
+    image: wazuh/wazuh-manager:4.14.10
+    hostname: wazuh.manager
+    restart: unless-stopped
+    ports:
+      - "1514:1514"
+      - "1515:1515"
+      - "55000:55000"
+    environment:
+      INDEXER_URL: https://wazuh.indexer:9200
+      INDEXER_USERNAME: ${INDEXER_USERNAME:-admin}
+      INDEXER_PASSWORD: ${INDEXER_PASSWORD:?Set INDEXER_PASSWORD in .env}
+      FILEBEAT_SSL_VERIFICATION_MODE: full
+      SSL_CERTIFICATE_AUTHORITIES: /etc/ssl/root-ca.pem
+      SSL_CERTIFICATE: /etc/ssl/filebeat.pem
+      SSL_KEY: /etc/ssl/filebeat.key
+      API_USERNAME: ${API_USERNAME:-wazuh-wui}
+      API_PASSWORD: ${API_PASSWORD:?Set API_PASSWORD in .env}
+    volumes:
+      - wazuh_api_configuration:/var/ossec/api/configuration
+      - wazuh_etc:/var/ossec/etc
+      - wazuh_logs:/var/ossec/logs
+      - wazuh_queue:/var/ossec/queue
+      - wazuh_var_multigroups:/var/ossec/var/multigroups
+      - wazuh_integrations:/var/ossec/integrations
+      - wazuh_active_response:/var/ossec/active-response/bin
+      - wazuh_agentless:/var/ossec/agentless
+      - wazuh_wodles:/var/ossec/wodles
+      - filebeat_etc:/etc/filebeat
+      - filebeat_var:/var/lib/filebeat
+      - ./local_rules.xml:/var/ossec/etc/rules/local_rules.xml:ro
+      - ./config/root-ca.pem:/etc/ssl/root-ca.pem:ro
+      - ./config/wazuh.manager.pem:/etc/ssl/filebeat.pem:ro
+      - ./config/wazuh.manager-key.pem:/etc/ssl/filebeat.key:ro
+    depends_on:
+      wazuh.indexer:
+        condition: service_healthy
+    networks:
+      wazuh:
+        ipv4_address: 172.30.0.10
+
+  wazuh.indexer:
+    image: wazuh/wazuh-indexer:4.14.10
+    hostname: wazuh.indexer
+    restart: unless-stopped
+    ports:
+      - "9200:9200"
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1g -Xmx1g"
+      INDEXER_USERNAME: ${INDEXER_USERNAME:-admin}
+      INDEXER_PASSWORD: ${INDEXER_PASSWORD:?Set INDEXER_PASSWORD in .env}
+    volumes:
+      - indexer_data:/var/lib/wazuh-indexer
+      - ./config/root-ca.pem:/usr/share/wazuh-indexer/certs/root-ca.pem:ro
+      - ./config/wazuh.indexer.pem:/usr/share/wazuh-indexer/certs/wazuh.indexer.pem:ro
+      - ./config/wazuh.indexer-key.pem:/usr/share/wazuh-indexer/certs/wazuh.indexer-key.pem:ro
+      - ./config/admin.pem:/usr/share/wazuh-indexer/certs/admin.pem:ro
+      - ./config/admin-key.pem:/usr/share/wazuh-indexer/certs/admin-key.pem:ro
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsSk https://localhost:9200/ -u \"$${INDEXER_USERNAME}:$${INDEXER_PASSWORD}\" >/dev/null"]
+      interval: 20s
+      timeout: 10s
+      retries: 12
+    networks:
+      wazuh:
+        ipv4_address: 172.30.0.11
+
+  wazuh.dashboard:
+    image: wazuh/wazuh-dashboard:4.14.10
+    hostname: wazuh.dashboard
+    restart: unless-stopped
+    ports:
+      - "443:5601"
+    environment:
+      INDEXER_USERNAME: ${INDEXER_USERNAME:-admin}
+      INDEXER_PASSWORD: ${INDEXER_PASSWORD:?Set INDEXER_PASSWORD in .env}
+      WAZUH_API_URL: https://wazuh.manager
+      API_USERNAME: ${API_USERNAME:-wazuh-wui}
+      API_PASSWORD: ${API_PASSWORD:?Set API_PASSWORD in .env}
+    volumes:
+      - ./config/root-ca.pem:/usr/share/wazuh-dashboard/certs/root-ca.pem:ro
+      - ./config/wazuh.dashboard.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard.pem:ro
+      - ./config/wazuh.dashboard-key.pem:/usr/share/wazuh-dashboard/certs/wazuh-dashboard-key.pem:ro
+    depends_on:
+      wazuh.indexer:
+        condition: service_healthy
+      wazuh.manager:
+        condition: service_started
+    networks:
+      wazuh:
+        ipv4_address: 172.30.0.12
+
+  wazuh.local-log-agent:
+    image: wazuh/wazuh-agent:4.14.10
+    hostname: wazuh.local-log-agent
+    restart: unless-stopped
+    profiles: ["local-logs"]
+    environment:
+      WAZUH_MANAGER: wazuh.manager
+      WAZUH_AGENT_NAME: local-log-agent
+      WAZUH_AGENT_GROUP: default
+    volumes:
+      - ${HOST_AUTH_LOG:-/var/log/auth.log}:/host-logs/auth.log:ro
+      - ${HOST_SYSLOG:-/var/log/syslog}:/host-logs/syslog:ro
+      - ./config/agent-ossec.conf:/var/ossec/etc/ossec.conf:ro
+    depends_on:
+      wazuh.manager:
+        condition: service_started
+    networks:
+      wazuh:
+        ipv4_address: 172.30.0.13
+
+volumes:
+  wazuh_api_configuration:
+  wazuh_etc:
+  wazuh_logs:
+  wazuh_queue:
+  wazuh_var_multigroups:
+  wazuh_integrations:
+  wazuh_active_response:
+  wazuh_agentless:
+  wazuh_wodles:
+  filebeat_etc:
+  filebeat_var:
+  indexer_data:
+
+networks:
+  wazuh:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24

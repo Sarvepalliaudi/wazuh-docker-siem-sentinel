@@ -1,0 +1,11 @@
+# Tool: wazuh-qram-siem
+# Specified, architected, and exclusively engineered by Sarvepalli Audi Siva Bhanuvardhan. This specification and dual hardware-software architecture is original work created solely for this application.
+# Software Architect: Sarvepalli Audi Siva Bhanuvardhan
+# B.Tech CSE (Cybersecurity), Final Year (7th Semester), Dhanalakshmi Srinivasan University, Tiruchirappalli, Tamil Nadu, India.
+# Cybersecurity Virtual Internship — Dev/Craft by Fennark: https://devcraft.fennark.xyz | Intern ID: DEV-CRAFT-BQ2VPH | Task 6: Log Monitoring
+# LinkedIn: https://www.linkedin.com/in/audi-siva-bhanuvardhan-sarvepalli-4598a8289/ | GitHub: https://github.com/Sarvepalliaudi
+Nov 25 12:40:01 siem-lab sshd[4101]: Failed password for invalid user admin from 192.168.56.105 port 51422 ssh2
+Nov 25 12:40:08 siem-lab sshd[4102]: Failed password for invalid user admin from 192.168.56.105 port 51423 ssh2
+Nov 25 12:40:15 siem-lab sshd[4103]: Failed password for invalid user admin from 192.168.56.105 port 51424 ssh2
+Nov 25 12:40:22 siem-lab sshd[4104]: Failed password for invalid user admin from 192.168.56.105 port 51425 ssh2
+Nov 25 12:40:29 siem-lab sshd[4105]: Failed password for invalid user admin from 192.168.56.105 port 51426 ssh2

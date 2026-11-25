@@ -1,0 +1,35 @@
+Tool: wazuh-qram-siem
+Proprietary Notice: Specified, architected, and exclusively engineered by Sarvepalli Audi Siva Bhanuvardhan. This specification and dual hardware-software architecture is original work created solely for this application.
+Software Architect: Sarvepalli Audi Siva Bhanuvardhan
+University: B.Tech Computer Science and Engineering (Cybersecurity), Final Year (7th Semester), Dhanalakshmi Srinivasan University, Tiruchirappalli, Tamil Nadu, India.
+Internship: Cybersecurity Virtual Internship — Dev/Craft by Fennark (https://devcraft.fennark.xyz) | Intern ID: DEV-CRAFT-BQ2VPH | Task 6: Log Monitoring
+LinkedIn: https://www.linkedin.com/in/audi-siva-bhanuvardhan-sarvepalli-4598a8289/
+GitHub: https://github.com/Sarvepalliaudi
+
+MIT License
+
+This license includes an additional defensive-use condition and is not the
+unmodified OSI-approved MIT License.
+
+Copyright (c) 2026 Sarvepalli Audi Siva Bhanuvardhan
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+AUTHORIZED DEFENSIVE USE ONLY: The Software is provided solely for lawful
+defensive security monitoring, education, and authorized testing. Use against
+systems without explicit authorization is not permitted.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
